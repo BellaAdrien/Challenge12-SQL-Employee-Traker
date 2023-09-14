@@ -18,7 +18,7 @@ VALUES ("Sales Lead",100000,1),
 
 
 
-INSERT INTO employee (first_name,last_name,role_id)
+INSERT INTO employees (first_name,last_name,role_id)
 VALUES ("John","Doe",1),
        ("Mike","Chan",2),
        ("Ashley","Rodriguez",3),

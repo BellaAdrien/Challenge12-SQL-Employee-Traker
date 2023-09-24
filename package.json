@@ -1,0 +1,18 @@
+{
+  "name": "challenge12-sql-employee-traker",
+  "version": "1.0.0",
+  "description": "## Description - What was your motivation? To create a functional employee tracker app that will help users track roles and salary information - Why did you build this project? To ensure that users will be able to log and access data based on categpories and roles - What problem does it solve? It helps users track different workers and worker information - What did you learn? I learned how to use several elements that included structuring and design to piece all of my knowledge together",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "console-table-printer": "^2.11.2",
+    "dotenv": "^16.3.1",
+    "inquirer": "^8.2.4",
+    "mysql2": "^3.6.1"
+  }
+}

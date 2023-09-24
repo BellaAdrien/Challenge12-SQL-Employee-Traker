@@ -35,7 +35,27 @@ addEmployee()
 updateEmployeeRole()
     }
    }) 
+
+   .then(answer=>{
+    if(answer.selection==="view all departments"){
+viewAllDepartments()
+    }else if(answer.selection==="add a department"){
+addADepartment()
+    }
+})
+
+.then(answer=>{
+    if(answer.selection==="view all roles"){
+viewAllRoles()
+    }else if(answer.selection==="add a role"){
+addARole()
+    }
+   }) 
+
+
+
 }
+
 
 function viewEployees(){
 
@@ -43,4 +63,19 @@ function viewEployees(){
 function addEmployee(){
 
 }
-function updateEmployeeRole(){}
+function updateEmployeeRole(){
+
+}
+function viewAllDepartments(){
+
+}
+
+function addADepartment(){
+
+}
+function viewAllRoles(){
+
+}
+function addARole(){
+    
+}

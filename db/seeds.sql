@@ -28,6 +28,8 @@ VALUES ("John","Doe",1),
        ("Sarah","Lourd",7),
        ("Tom","Allen",8);
 
+       UPDATE employee set manager_id =1 WHERE id=2;
+
 
 
 

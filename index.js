@@ -111,10 +111,36 @@ inquirer.prompt([
 
 }
 function updateEmployeeRole() {
+    db.query("SELECT id as value,title as name from role ", (err,roleData)=>{
+        db.query("SELECT id as value, CONCAT(first_name,' ', last_name) as name FROM employee  ", (err, employeeData)=>{
+            inquirer.prompt([
+               
+               {
+                   type:"list",
+                   message:"Choose the following title:",
+                   name:"role_id",
+                   choices:roleData
+                    
+               },
+               {
+                   type:"list",
+                   message:"Choose the following employee:",
+                   name:"employee_id",
+                   choices: employeeData
+                    
+               },
+    
+            ]).then(answer=>{
+               db.query("UPDATE employee SET role_id = ? WHERE id= ? ",[answer.role_id,answer.employee_id],err=>{
+                   viewEmployees()
+                })
+            })
+        })
+     })
 
 }
 function viewAllDepartments() {
-
+    // db.query("SELECT id as value,title as name from role ", (err,roleData)=>{
 }
 
 function addADepartment() {

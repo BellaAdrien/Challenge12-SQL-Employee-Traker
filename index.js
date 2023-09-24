@@ -70,6 +70,44 @@ left join employee as bosses on employee.manager_id=bosses.id;
     })
 }
 function addEmployee() {
+db.query("SELECT id as value, title as name from role", (err,roleData) => {
+    db.query("SELECT id as value, CONCAT(first_name, ' ', last_name) as name FROM employee WHERE manager_id is null", (err,ManagerData)=>{
+inquirer.prompt([
+    {
+        type:"Input",
+        message:"What is the first name?",
+        name:"first_name",
+        
+    },
+    {
+        type:"Input",
+        message:"What is the last name?",
+        name:"last_name",
+        
+    },
+    {
+        type:"list",
+        message:"Choose the following title:",
+        name:"role_id",
+        choices:roleData
+        
+    },
+    {
+        type:"list",
+        message:"Choose the following Manager:",
+        name:"manager_id",
+        choices:ManagerData
+        
+    },
+
+]). then(answer=>{
+    db.query("INSERT INTO employee(first_name, last_name,role_id,manager_id) VALUES(?,?,?,?)", [answer.first_name, answer.last_name, answer.role_id, answer.manager_id], err=>{
+        viewEmployees()
+    })
+})
+    })
+})
+
 
 }
 function updateEmployeeRole() {

@@ -1,4 +1,4 @@
-const inquire = require("inquirer")
+const inquirer = require("inquirer")
 const mysql = require("mysql2")
 const { printTable } = require("console-table-printer")
 
@@ -19,9 +19,8 @@ db.connect(() => {
 
 })
 
-function mainMenu() {
-    inquirer.prompt({
-
+function mainMenu(){
+    inquirer .prompt({
         type: "list",
         message: "What would you like to do?",
         name: "selections",

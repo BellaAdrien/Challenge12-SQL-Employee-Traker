@@ -140,7 +140,7 @@ function updateEmployeeRole() {
 
 }
 function viewAllDepartments() {
-    // db.query("SELECT id as value,title as name from role ", (err,roleData)=>{
+    // db.query("SELECT id as value,title as name from role ", (err,departmentData)=>{
 }
 
 function addADepartment() {

@@ -27,27 +27,24 @@ function mainMenu(){
         choices: ["view all departments", "view all roles", "view all employees", "add a department", "add a role", "add an employee", "update an employee role"]
     })
         .then(answer => {
-            if (answer.selection === "view all employees") {
+            if (answer.selections === "view all employees") {
                 viewEmployees()
-            } else if (answer.selection === "add an employee") {
+            } else if (answer.selections === "add an employee") {
                 addEmployee()
-            } else if (answer.selection === "update an employee role") {
+            } else if (answer.selections === "update an employee role") {
                 updateEmployeeRole()
             }
-        })
-
-        .then(answer => {
-            if (answer.selection === "view all departments") {
+        
+            else if (answer.selections === "view all departments") {
+                console.log(answer.selections);
                 viewAllDepartments()
-            } else if (answer.selection === "add a department") {
+            } else if (answer.selections === "add a department") {
                 addADepartment()
             }
-        })
-
-        .then(answer => {
-            if (answer.selection === "view all roles") {
+        
+            else if (answer.selections === "view all roles") {
                 viewAllRoles()
-            } else if (answer.selection === "add a role") {
+            } else if (answer.selections === "add a role") {
                 addARole()
             }
         })
@@ -57,13 +54,14 @@ function mainMenu(){
 }
 
 
-function viewEployees() {
-    db.query(`SELECT employee.id, employee.first_name, employee.last_name, title, name as department, salary, 
-CONCAT( bosses.first_name, ' ',bosses.last_name) as manager 
-from employee
-left join role on employee.role_id = role.id
-left join department on department.id = role.department_id
-left join employee as bosses on employee.manager_id=bosses.id;
+function viewEmployees() {
+    db.query(` SELECT employees.id, employees.first_name, employees.last_name, title, name as department, salary, 
+    CONCAT( bosses.first_name, ' ',bosses.last_name) as manager 
+    from employees
+    left join role on employees.role_id = role.id
+    left join department on department.id = role.department_id
+    left join employees as bosses on employees.manager_id=bosses.id;
+   
 `, (err, data) => {
         printTable(data)
         mainMenu()
@@ -71,7 +69,7 @@ left join employee as bosses on employee.manager_id=bosses.id;
 }
 function addEmployee() {
 db.query("SELECT id as value, title as name from role", (err,roleData) => {
-    db.query("SELECT id as value, CONCAT(first_name, ' ', last_name) as name FROM employee WHERE manager_id is null", (err,ManagerData)=>{
+    db.query("SELECT id as value, CONCAT(first_name, ' ', last_name) as name FROM employees WHERE manager_id is null", (err,ManagerData)=>{
 inquirer.prompt([
     {
         type:"Input",
@@ -101,7 +99,7 @@ inquirer.prompt([
     },
 
 ]). then(answer=>{
-    db.query("INSERT INTO employee(first_name, last_name,role_id,manager_id) VALUES(?,?,?,?)", [answer.first_name, answer.last_name, answer.role_id, answer.manager_id], err=>{
+    db.query("INSERT INTO employees(first_name, last_name,role_id,manager_id) VALUES(?,?,?,?)", [answer.first_name, answer.last_name, answer.role_id, answer.manager_id], err=>{
         viewEmployees()
     })
 })
@@ -112,7 +110,7 @@ inquirer.prompt([
 }
 function updateEmployeeRole() {
     db.query("SELECT id as value,title as name from role ", (err,roleData)=>{
-        db.query("SELECT id as value, CONCAT(first_name,' ', last_name) as name FROM employee  ", (err, employeeData)=>{
+        db.query("SELECT id as value, CONCAT(first_name,' ', last_name) as name FROM employees  ", (err, employeeData)=>{
             inquirer.prompt([
                
                {
@@ -124,14 +122,14 @@ function updateEmployeeRole() {
                },
                {
                    type:"list",
-                   message:"Choose the following employee:",
-                   name:"employee_id",
+                   message:"Choose the following employees:",
+                   name:"employees_id",
                    choices: employeeData
                     
                },
     
             ]).then(answer=>{
-               db.query("UPDATE employee SET role_id = ? WHERE id= ? ",[answer.role_id,answer.employee_id],err=>{
+               db.query("UPDATE employees SET role_id = ? WHERE id= ? ",[answer.role_id,answer.employees_id],err=>{
                    viewEmployees()
                 })
             })
@@ -140,15 +138,59 @@ function updateEmployeeRole() {
 
 }
 function viewAllDepartments() {
-    // db.query("SELECT id as value,title as name from role ", (err,departmentData)=>{
+    console.log("viewAllDepartments");
+    db.query("SELECT * from department ", (err,departmentData)=>{
+        printTable(departmentData);
+        mainMenu();
+    }); 
+    
 }
 
 function addADepartment() {
+inquirer.prompt([{
+    type:"input",
+    message:"Enter new department",
+    name:"department_name",
 
+}]).then(answer=>{
+    db.query("INSERT INTO department(name) values(?)",[answer.department_name],(err)=>{
+        viewAllDepartments()
+    })
+})
 }
 function viewAllRoles() {
+    db.query(` SELECT role.id , title,salary,name as department 
+    from role LEFT JOIN
+     department on department.id=  role.department_id;`, (err,roleData)=>{
+        printTable(roleData);
+        mainMenu();
+    })
 
 }
 function addARole() {
+   db.query(`SELECT id value, title name from role`, (err, roleData)=>{
+    inquirer.prompt([{
+        type:"input",
+        message:"enter new title",
+        name:"title"
+    },
+    {
+        type:"input",
+        message:"enter salary value",
+        name:"salary"
+    },
+    {
+        type:"list",
+        message:"choose department name",
+        name:"department_id",
+        choices: roleData
+    }
+    ]).then(answer =>{
+        db.query(`INSERT INTO role (title, salary, department_id) values (?,?,?)`, 
+        [answer.title, answer.salary, answer.department_id],(err, roleData)=>{
+            viewAllRoles()
+        })
+    })
+   }) 
 
 }
